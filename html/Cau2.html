@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cau2_tuan9</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <script src="../js/jquery-3.7.1.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+  </head>
+
+  <style>
+    [class*="col-"] {
+      padding: 0px;
+      margin: 0px auto;
+    }
+    .err {
+      color: red;
+    }
+  </style>
+
+  <script>
+    $(document).ready(function () {
+      //Kieme tra ma tour
+      function ktrMaTour() {
+        let maTour = $("#maTour").val();
+        if (maTour == "") {
+          $("#errMaTour").html("Không được để trống mã tour");
+          return false;
+        } else if (!/^[A-Z]{3}-[A-Z]{3}-[0-9]{2}-[0-9]{4}$/.test(maTour)) {
+          $("#errMaTour").html("Mã Tour theo mẫu: XXX-XXX-mm-yyyy");
+          return false;
+        } else {
+          $("#errMaTour").html("*");
+        }
+        return true;
+      }
+      $("#maTour").blur(function (e) {
+        ktrMaTour();
+      });
+
+      //Kiểm tra hành trình
+      function ktrHanhTrinh() {
+        let hanhTrinh = $("#hanhTrinh").val();
+        if (hanhTrinh == "") {
+          $("#errHanhTrinh").html("Không được để trống hành trình");
+          return false;
+        } else {
+          $("#errHanhTrinh").html("*");
+        }
+        return true;
+      }
+      $("#hanhTrinh").blur(function (e) {
+        ktrHanhTrinh();
+      });
+
+      //Kiểm tra ngày khởi hành
+      function ktrNgayKhoiHanh() {
+        let ngayHienTai = new Date();
+        let ngayKtr = new Date($("#ngayKH").val());
+        let ngayHopLe = new Date(
+          ngayHienTai.setDate(ngayHienTai.getDate() + 30)
+        );
+
+        if ($("#ngayKH").val() == "") {
+          $("#errNgayKH").html("Không được để trống ngày khởi hành");
+          return false;
+        } else if (ngayKtr < ngayHopLe) {
+          $("#errNgayKH").html("Ngày khởi hành phải sau ngày hiện tại 30 ngày");
+          return false;
+        } else {
+          $("#errNgayKH").html("*");
+        }
+        return true;
+      }
+      $("#ngayKH").blur(function (e) {
+        ktrNgayKhoiHanh();
+      });
+
+      //Kiểm tra gia tour
+      function ktrGiaTour() {
+        let gia = $("#giaTour").val();
+        if (gia == "") {
+          $("#errGiaTour").html("Không được để trống giá tour");
+          return false;
+        } else if (gia <= 0) {
+          $("#errGiaTour").html("Giá Tour là số >0");
+          return false;
+        } else {
+          $("#errGiaTour").html("*");
+        }
+        return true;
+      }
+      $("#giaTour").blur(function (e) {
+        ktrGiaTour();
+      });
+
+      //Kiểm tra hình đại diện
+      function ktrHDD() {
+        let hdd = $("#hinhDaiDien").val();
+        let tenFile = hdd.split("\\").pop();
+        if (tenFile == "") {
+          $("#errHDD").html("Không được để trống hình ảnh");
+          return false;
+        } else if (!/^(jpg)|(gif)|(png)$/.test(tenFile.split(".").pop())) {
+          $("#errHDD").html(
+            "Hình đại diện phải đúng loại hình thuộc 1 trong các đuôi kiểu jpg, gif, png"
+          );
+          return false;
+        } else {
+          $("#errHDD").html("*");
+        }
+        return true;
+      }
+      $("#hinhDaiDien").blur(function (e) {
+        ktrHDD();
+      });
+
+      let stt = 1;
+      //Thêm vào table
+      $("#btnLuu").click(function (e) {
+        ktrMaTour();
+        ktrHanhTrinh();
+        ktrNgayKhoiHanh();
+        ktrGiaTour();
+        ktrHDD();
+
+        let maTour = $("#maTour").val();
+        let hanhTrinh = $("#hanhTrinh").val();
+        let ngayKH = $("#ngayKH").val();
+        let thoiGian = $("#thoiGian").val();
+        let gia = $("#giaTour").val();
+        let hdd = $("#hinhDaiDien").val();
+        let tenFile = hdd.split("\\").pop();
+
+        if(ktrMaTour() == true &&
+        ktrHanhTrinh() == true &&
+        ktrNgayKhoiHanh() == true &&
+        ktrGiaTour() == true &&
+        ktrHDD() == true){
+            let newRow = "<tr> <td>"+stt+"</td> <td>"+maTour+"</td> <td>"+hanhTrinh+"</td>  <td>"+ngayKH+"</td> <td>"+thoiGian+"</td> <td>"+gia+"</td> <td>"+tenFile+"</td> </tr>";
+            $("table tbody").append(newRow);
+            stt++;
+        }
+
+      });
+    });
+  </script>
+  <body>
+    <!-- Header -->
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <img src="../img/banner-5.png" alt="" />
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <nav class="nav navbar-expand">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a href="#" class="nav-link">Đăng nhập</a>
+              </li>
+              <li class="nav-item">
+                <a
+                  href="#"
+                  class="nav-link"
+                  data-toggle="modal"
+                  data-target="#myModal"
+                  >Mở tour mới</a
+                >
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="modal" id="myModal">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header justify-content-center">
+                  <h3>THÔNG TIN TOUR</h3>
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                  >
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+
+                <div class="modal-body">
+                  <form action="">
+                    <div class="form-group row">
+                      <label for="maTour" class="col-2 col-form-lable"
+                        >Mã tour</label
+                      >
+                      <div class="col-10">
+                        <input
+                          type="text"
+                          name="maTour"
+                          id="maTour"
+                          class="form-control"
+                        />
+                        <span class="err" id="errMaTour">*</span>
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <label for="hanhTrinh" class="col-2 col-form-lable"
+                        >Hành trình</label
+                      >
+                      <div class="col-10">
+                        <input
+                          type="text"
+                          name="hanhTrinh"
+                          id="hanhTrinh"
+                          class="form-control"
+                        />
+                        <span class="err" id="errHanhTrinh">*</span>
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <label for="ngayKH" class="col-2 col-form-lable"
+                        >Ngày khởi hành</label
+                      >
+                      <div class="col-10">
+                        <input
+                          type="date"
+                          name="ngayKH"
+                          id="ngayKH"
+                          class="form-control"
+                        />
+                        <span class="err" id="errNgayKH">*</span>
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <label for="thoiGian" class="col-2 col-form-lable"
+                        >Thời gian</label
+                      >
+                      <div class="col-10">
+                        <input
+                          type="text"
+                          name="thoiGian"
+                          id="thoiGian"
+                          class="form-control"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <label for="giaTour" class="col-2 col-form-lable"
+                        >Giá tour</label
+                      >
+                      <div class="col-10">
+                        <input
+                          type="number"
+                          name="giaTour"
+                          id="giaTour"
+                          class="form-control"
+                        />
+                        <span class="err" id="errGiaTour">*</span>
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <label for="hinhDaiDien" class="col-2 col-form-lable"
+                        >Ảnh đại diện</label
+                      >
+                      <div class="col-10">
+                        <input
+                          type="file"
+                          name="hinhDaiDien"
+                          id="hinhDaiDien"
+                          class="form-control"
+                        />
+                        <span class="err" id="errHDD">*</span>
+                      </div>
+                    </div>
+
+                    <button
+                      class="btn btn-success btn-block"
+                      type="button"
+                      id="btnLuu"
+                    >
+                      Lưu
+                    </button>
+                  </form>
+                </div>
+
+                <div class="modal-footer"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col-md-12">
+            <h3 class="text-center">DANH SÁCH TOUR - DU LỊCH VIỆT</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>STT</th>
+                <th>Mã Tour</th>
+                <th>Hành trình</th>
+                <th>Ngày khởi hành</th>
+                <th>Thời gian</th>
+                <th>Giá tour</th>
+                <th>Hình đại diện</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
